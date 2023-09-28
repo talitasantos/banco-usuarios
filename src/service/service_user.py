@@ -11,34 +11,64 @@ class ServiceUser:
     def verify_user(self, name):
         for user in self.store.bd:
             if user.name == name:
-                return user
-        return None
+                return user, self.store.bd.index(user)
+        return None, None
 
     def add_user(self, name, job):
-        if name != None and  job != None:
+        if name != None and job != None:
             if isinstance(name, str) and isinstance(job, str):
-                existsUser = self.verify_user(name)
+                existsUser, index = self.verify_user(name)
                 if existsUser == None:
                     user = User(name=name, job=job)
                     self.store.bd.append(user)
                     return "Usuário adicionado"
                 else:
-                 return "Usuário já existe!"
+                    return "Usuário já existe!"
             else:
-             return "Usuário inválido"
+                return "Usuário inválido"
         else:
-          return "Usuário inválido"
+            return "Usuário inválido"
 
     def remove_user(self, name, job):
         if name != None and job != None:
             if isinstance(name, str) and isinstance(job, str):
-                user = self.verify_user(name)
+                user, index = self.verify_user(name)
                 if user != None:
                     self.store.bd.remove(user)
-                    return "Usuário removido"
+                    return "Usuário removido!"
                 else:
                     return "Usuário não existe!"
             else:
                 "Usuário inválido"
         else:
             return "Usuário inválido"
+
+    def update_user_name(self, name, job, new_name):
+        if name != None and job != None:
+            if isinstance(name, str) and isinstance(job, str):
+                existsUser, index = self.verify_user(name)
+                if existsUser != None:
+                    existsUser.name = new_name
+                    existsUser.job = job
+                    self.store.bd[index] = existsUser
+                    return "Usuário atualizado: " + existsUser.name
+                else:
+                    return "Usuário já existe!"
+            else:
+                return "Usuário inválido"
+        else:
+            return "Usuário inválido"
+
+    def get_user_by_name(self, name, job):
+        if name != None and job != None:
+            if isinstance(name, str) and isinstance(job, str):
+                existsUser, index = self.verify_user(name)
+                return existsUser.name
+            else:
+                return "Usuário inválido"
+        else:
+            return "Usuário inválido"
+
+    def list_user(self):
+        for user in self.store.bd:
+            print(user.name, user.job)
